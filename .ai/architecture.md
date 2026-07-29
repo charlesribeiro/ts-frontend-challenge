@@ -2,7 +2,7 @@
 
 ## Layout
 
-```
+```text
 src/
   app/
     app.component.*     Root component
@@ -15,7 +15,7 @@ src/
 
 As the app grows, group by feature rather than by file type:
 
-```
+```text
 src/app/
   core/                 App-wide singletons: HTTP, config, interceptors
   shared/               Reusable presentational components, pipes, directives

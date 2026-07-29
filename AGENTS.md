@@ -24,8 +24,9 @@ Run these from the repository root. Node version is pinned in `.nvmrc`.
 | Format           | `npm run format`        |
 | Format check     | `npm run format:check`  |
 
-Before handing work back, `npm run lint`, `npm test` and `npm run build` must all
-pass. These are the same checks CI runs.
+Before handing work back, `npm run format:check`, `npm run lint`,
+`npm run test:coverage` and `npm run build` must all pass. These are the same
+checks CI runs, in the same order.
 
 ## Conventions
 

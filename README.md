@@ -35,7 +35,7 @@ The dev server runs at http://localhost:4200 and reloads on file changes.
 
 ## Project structure
 
-```
+```text
 src/
   app/          Components, services and routes
   assets/       Static files copied into the build
