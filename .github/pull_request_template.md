@@ -10,9 +10,11 @@
 
 ## Checklist
 
+- [ ] `npm run format:check` passes
 - [ ] `npm run lint` passes
-- [ ] `npm test` passes
-- [ ] `npm run build` passes
+- [ ] `npm run typecheck` passes
+- [ ] `npm run test:ci` passes
+- [ ] `npm run build:prod` passes
 - [ ] Tests cover the new behaviour
 - [ ] README or `.ai/` docs updated if the setup or conventions changed
 
