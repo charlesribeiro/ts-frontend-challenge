@@ -5,6 +5,15 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    # Angular majors need `ng update` to run its migration schematics, which
+    # Dependabot cannot do. It also bumps only part of the toolchain, leaving the
+    # CLI and build tooling a major behind and the lockfile unresolvable. Majors
+    # are done by hand, one at a time.
+    ignore:
+      - dependency-name: '@angular*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'zone.js'
+        update-types: ['version-update:semver-major']
     groups:
       angular:
         patterns:
