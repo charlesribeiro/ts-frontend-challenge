@@ -43,16 +43,51 @@ wrapper or an `importProvidersFrom` call.
 
 ## 4. Node version pinned in .nvmrc
 
-**Decision:** Pin Node 20 in `.nvmrc`, constrain `engines.node` to
-`^18.13.0 || ^20.9.0` in `package.json`, and have CI read the version from
-`.nvmrc`.
+**Decision:** Pin Node 22 in `.nvmrc`, declare `engines.node` in `package.json`,
+and have CI read the version from `.nvmrc`.
 
 **Why:** One file defines the runtime for local development and CI, so a build
-that passes locally is running on the same major version as CI. The range is
-exactly what Angular 17.3 supports; newer majors such as Node 22 happen to work
-but are outside the version Angular tests against, and the Angular packages'
-own `engines` field is too loose to catch that.
+that passes locally is running on the same major version as CI.
 
-**Cost:** Node 20 rather than the current LTS, until Angular is upgraded.
-Bumping Node means editing two places, and `engines` is a warning rather than a
-hard failure unless `engine-strict` is enabled.
+**Cost:** Bumping Node means editing two places, and `engines` is a warning
+rather than a hard failure unless `engine-strict` is enabled.
+
+## 5. Node narrowed to 20 to match Angular 17.3's tested matrix
+
+**Supersedes:** 4.
+
+**Decision:** Pin Node 20 in `.nvmrc` and constrain `engines.node` to
+`^18.13.0 || ^20.9.0`.
+
+**Why:** `^18.13.0 || ^20.9.0` is exactly the range Angular 17.3 is tested
+against. Node 22 happens to work, but the Angular packages' own `engines` field
+(`>=20.9.0`) has no upper bound, so nothing warns when the runtime drifts past
+what Angular has verified.
+
+**Cost:** Gives up the current LTS until Angular is upgraded. It also turned out
+to pin an end-of-life runtime, which is why entry 6 reverses it.
+
+## 6. Node returned to 22 under a documented waiver
+
+**Supersedes:** 5.
+
+**Decision:** Pin Node 22 in `.nvmrc` and constrain `engines.node` to
+`^22.12.0`.
+
+**Why:** Node 18 reached end of life on 2025-04-30 and Node 20 on 2026-04-30, so
+entry 5 pinned a runtime that no longer receives security patches. Angular 17.3
+is tested only against those two lines and Angular 17 is itself out of support,
+so that matrix will never be updated: no Node version can satisfy both "tested
+by Angular 17" and "still patched". An unpatched runtime is the larger risk of
+the two, so we take the supported Node and accept being outside Angular's tested
+range. Node 22.22.0 was verified against format, lint, typecheck, tests and a
+production build before making the change.
+
+**Waiver:** Scoped to Node 22 only; Node 24 is left out because it has not been
+verified against Angular 17. Expires on 2027-04-30, when Node 22 leaves
+maintenance, or when Angular is upgraded, whichever comes first. Upgrading
+Angular is the real fix and removes the need for the waiver.
+
+**Cost:** Runs on a Node major Angular 17.3 never tested, so a runtime-specific
+bug in the toolchain is our problem to diagnose rather than a known
+incompatibility.

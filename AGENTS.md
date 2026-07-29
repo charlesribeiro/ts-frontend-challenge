@@ -43,7 +43,9 @@ coverage thresholds in `jest.config.js`, so it can fail when `npm test` passes.
   `app` prefixed camelCase. ESLint enforces both.
 - Co-locate each spec with the file it tests as `<name>.spec.ts`.
 - Prefix a deliberately unused parameter with `_`; ESLint ignores those and
-  reports every other unused binding as an error.
+  reports every other unused binding as an error. The exemption covers
+  parameters only: delete unused variables, and write `catch {}` rather than
+  binding an error you never read.
 
 ## Formatting and linting
 

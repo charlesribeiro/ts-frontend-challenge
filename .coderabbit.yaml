@@ -1,37 +1,47 @@
-# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
 language: en-US
-early_access: false
 
 reviews:
-  profile: chill
-  request_changes_workflow: false
+  profile: assertive
   high_level_summary: true
   review_status: true
-  poem: false
-  collapse_walkthrough: false
-  path_filters:
-    - '!package-lock.json'
-    - '!dist/**'
-    - '!coverage/**'
-  path_instructions:
-    - path: 'src/**/*.ts'
-      instructions: >-
-        Angular 17 with standalone components. Flag components missing
-        OnPush change detection, subscriptions that are never unsubscribed,
-        and business logic that belongs in a service rather than a component.
-    - path: 'src/**/*.html'
-      instructions: >-
-        Flag accessibility problems: missing labels, non-semantic elements
-        used for interactive controls, and images without alt text.
-    - path: '**/*.spec.ts'
-      instructions: >-
-        Tests use Jest. Flag assertions on implementation details rather
-        than observable behaviour, and tests without a clear assertion.
+
   auto_review:
     enabled: true
     drafts: false
-    base_branches:
-      - main
 
-chat:
-  auto_reply: true
+  path_instructions:
+    - path: 'src/**/*.ts'
+      instructions: |
+        Review as a Senior Angular architect.
+
+        Focus on:
+        - Angular 17 best practices
+        - Signals
+        - Standalone components
+        - inject()
+        - OnPush
+        - strict typing
+        - unnecessary complexity
+        - performance
+        - readability
+        - maintainability
+
+    - path: 'src/**/*.html'
+      instructions: |
+        Review accessibility, semantic HTML,
+        Angular control flow (@if/@for),
+        responsive layout and keyboard navigation.
+
+    - path: 'src/**/*.scss'
+      instructions: |
+        Review CSS organization,
+        component encapsulation,
+        responsiveness,
+        duplicated styles,
+        and accessibility.
+
+    - path: '**/*.spec.ts'
+      instructions: |
+        Suggest missing edge cases,
+        brittle assertions,
+        and opportunities to improve test quality.
