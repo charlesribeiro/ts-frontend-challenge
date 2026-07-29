@@ -1,0 +1,47 @@
+language: en-US
+
+reviews:
+  profile: assertive
+  high_level_summary: true
+  review_status: true
+
+  auto_review:
+    enabled: true
+    drafts: false
+
+  path_instructions:
+    - path: 'src/**/*.ts'
+      instructions: |
+        Review as a Senior Angular architect.
+
+        Focus on:
+        - Angular 17 best practices
+        - Signals
+        - Standalone components
+        - inject()
+        - OnPush
+        - strict typing
+        - unnecessary complexity
+        - performance
+        - readability
+        - maintainability
+
+    - path: 'src/**/*.html'
+      instructions: |
+        Review accessibility, semantic HTML,
+        Angular control flow (@if/@for),
+        responsive layout and keyboard navigation.
+
+    - path: 'src/**/*.scss'
+      instructions: |
+        Review CSS organization,
+        component encapsulation,
+        responsiveness,
+        duplicated styles,
+        and accessibility.
+
+    - path: '**/*.spec.ts'
+      instructions: |
+        Suggest missing edge cases,
+        brittle assertions,
+        and opportunities to improve test quality.
