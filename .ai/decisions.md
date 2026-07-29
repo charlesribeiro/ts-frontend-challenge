@@ -43,11 +43,16 @@ wrapper or an `importProvidersFrom` call.
 
 ## 4. Node version pinned in .nvmrc
 
-**Decision:** Pin Node 22 in `.nvmrc`, declare `engines.node` in `package.json`,
-and have CI read the version from `.nvmrc`.
+**Decision:** Pin Node 20 in `.nvmrc`, constrain `engines.node` to
+`^18.13.0 || ^20.9.0` in `package.json`, and have CI read the version from
+`.nvmrc`.
 
 **Why:** One file defines the runtime for local development and CI, so a build
-that passes locally is running on the same major version as CI.
+that passes locally is running on the same major version as CI. The range is
+exactly what Angular 17.3 supports; newer majors such as Node 22 happen to work
+but are outside the version Angular tests against, and the Angular packages'
+own `engines` field is too loose to catch that.
 
-**Cost:** Bumping Node means editing two places, and `engines` is a warning
-rather than a hard failure unless `engine-strict` is enabled.
+**Cost:** Node 20 rather than the current LTS, until Angular is upgraded.
+Bumping Node means editing two places, and `engines` is a warning rather than a
+hard failure unless `engine-strict` is enabled.
