@@ -23,11 +23,14 @@ The dev server runs at http://localhost:4200 and reloads on file changes.
 | Command                 | What it does                               |
 | ----------------------- | ------------------------------------------ |
 | `npm start`             | Dev server with live reload                |
-| `npm run build`         | Production build into `dist/`              |
+| `npm run build`         | Build into `dist/`                         |
+| `npm run build:prod`    | Production build into `dist/`              |
 | `npm run watch`         | Development build, rebuilt on change       |
+| `npm run typecheck`     | Typecheck without emitting output          |
 | `npm test`              | Run the Jest suite once                    |
 | `npm run test:watch`    | Run Jest in watch mode                     |
 | `npm run test:coverage` | Run Jest and write coverage to `coverage/` |
+| `npm run test:ci`       | Run Jest as CI does, with thresholds       |
 | `npm run lint`          | Lint TypeScript and templates              |
 | `npm run lint:fix`      | Lint and apply fixable corrections         |
 | `npm run format`        | Format every file with Prettier            |
@@ -58,8 +61,8 @@ Configuration lives in [`jest.config.js`](jest.config.js).
 - **ESLint** with `angular-eslint` covers TypeScript and template accessibility.
 - **Husky** runs lint-staged before each commit, so staged files are linted and
   formatted automatically.
-- **CI** runs format check, lint, tests with coverage, and a production build on
-  every pull request.
+- **CI** runs format check, lint, typecheck, tests with coverage thresholds, and
+  a production build on every pull request.
 
 ## Contributing
 

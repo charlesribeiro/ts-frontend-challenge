@@ -15,18 +15,22 @@ Run these from the repository root. Node version is pinned in `.nvmrc`.
 | Task             | Command                 |
 | ---------------- | ----------------------- |
 | Dev server       | `npm start`             |
-| Production build | `npm run build`         |
+| Build            | `npm run build`         |
+| Production build | `npm run build:prod`    |
+| Typecheck        | `npm run typecheck`     |
 | Tests            | `npm test`              |
 | Tests (watch)    | `npm run test:watch`    |
 | Coverage         | `npm run test:coverage` |
+| Tests as CI runs | `npm run test:ci`       |
 | Lint             | `npm run lint`          |
 | Lint and fix     | `npm run lint:fix`      |
 | Format           | `npm run format`        |
 | Format check     | `npm run format:check`  |
 
 Before handing work back, `npm run format:check`, `npm run lint`,
-`npm run test:coverage` and `npm run build` must all pass. These are the same
-checks CI runs, in the same order.
+`npm run typecheck`, `npm run test:ci` and `npm run build:prod` must all pass.
+These are the same checks CI runs, in the same order. `test:ci` enforces the
+coverage thresholds in `jest.config.js`, so it can fail when `npm test` passes.
 
 ## Conventions
 
@@ -38,6 +42,8 @@ checks CI runs, in the same order.
 - Component selectors are `app-` prefixed kebab-case; directive selectors are
   `app` prefixed camelCase. ESLint enforces both.
 - Co-locate each spec with the file it tests as `<name>.spec.ts`.
+- Prefix a deliberately unused parameter with `_`; ESLint ignores those and
+  reports every other unused binding as an error.
 
 ## Formatting and linting
 
