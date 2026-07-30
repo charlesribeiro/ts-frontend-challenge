@@ -1,0 +1,82 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.shell-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-5);
+  padding: var(--space-3) var(--space-5);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.shell-header__brand {
+  color: var(--color-text);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.shell-header__nav {
+  display: flex;
+  gap: var(--space-2);
+  margin-right: auto;
+
+  a {
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-muted);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--color-text);
+    }
+
+    &.is-active {
+      background: var(--color-accent-wash);
+      color: var(--color-accent-strong);
+      font-weight: 500;
+    }
+  }
+}
+
+.shell-header__account {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.shell-header__user {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+.shell-header__logout {
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.875rem;
+
+  &:hover {
+    border-color: var(--color-text-muted);
+  }
+}
+
+.shell-main {
+  flex: 1;
+  padding: var(--space-5);
+}
+
+@media (width <= 40rem) {
+  .shell-header__user {
+    display: none;
+  }
+}
