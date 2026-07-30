@@ -1,1 +1,16 @@
-<p>deals-page works!</p>
+<section class="deals-page">
+  <header class="deals-page__header">
+    <h1 class="deals-page__title">Deals</h1>
+    <p class="deals-page__intro">Browse the current pipeline and narrow it by name or price.</p>
+  </header>
+
+  <app-deal-filters
+    [searchTerm]="searchTerm()"
+    [priceFilter]="priceFilter()"
+    (searchTermChange)="onSearchTermChange($event)"
+    (priceFilterChange)="onPriceFilterChange($event)"
+    (clear)="onClearFilters()"
+  />
+
+  <app-deals-table [deals]="filteredDeals()" [searchTerm]="searchTerm()" />
+</section>

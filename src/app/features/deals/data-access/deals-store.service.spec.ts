@@ -109,4 +109,15 @@ describe('DealsStoreService', () => {
 
     expect(store.filteredDeals()).toEqual(filteredBefore);
   });
+
+  it('clears the search term and price filter together', () => {
+    store.setSearchTerm('plaza');
+    store.setPriceFilter({ comparison: 'lessThan', amount: 5_000_000 });
+
+    store.clearFilters();
+
+    expect(store.searchTerm()).toBe('');
+    expect(store.priceFilter()).toEqual(EMPTY_PRICE_FILTER);
+    expect(store.filteredDeals()).toEqual(MOCK_DEALS);
+  });
 });
