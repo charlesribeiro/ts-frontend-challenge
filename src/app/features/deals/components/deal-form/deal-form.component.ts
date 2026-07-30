@@ -4,6 +4,7 @@ import {
   Component,
   ElementRef,
   inject,
+  input,
   output,
   signal,
 } from '@angular/core';
@@ -18,9 +19,8 @@ import {
 } from '@angular/forms';
 import { map, startWith } from 'rxjs';
 
-import { Deal } from '../../models/deal.model';
+import { CreateDealInput } from '../../models/create-deal-input.model';
 import { calculateCapRate } from '../../utils/calculate-cap-rate';
-import { createDealId } from '../../utils/create-deal-id';
 
 /** Treats whitespace-only strings as missing, matching how values are stored after trim. */
 function requiredTrimmed(): ValidatorFn {
@@ -39,8 +39,12 @@ function requiredTrimmed(): ValidatorFn {
  * Presentational form for creating a deal.
  *
  * Cap rate is derived on the fly from the financial fields — never stored on
- * the emitted deal — so the live preview cannot disagree with what the table
- * will show after submission.
+ * the emitted payload — so the live preview cannot disagree with what the table
+ * will show after the server accepts the create.
+ *
+ * The form emits a create request without an `id`. The parent runs the
+ * pessimistic POST; call `confirmCreated` only after success so values stay put
+ * on failure and the success status is honest.
  */
 @Component({
   selector: 'app-deal-form',
@@ -54,7 +58,9 @@ export class DealFormComponent {
   private readonly formBuilder = inject(FormBuilder);
   private readonly host = inject(ElementRef<HTMLElement>);
 
-  readonly dealCreated = output<Deal>();
+  readonly creating = input(false);
+  readonly createError = input<string | null>(null);
+  readonly createRequested = output<CreateDealInput>();
 
   private readonly statusMessageState = signal<string | null>(null);
 
@@ -106,6 +112,10 @@ export class DealFormComponent {
   submit(): void {
     this.statusMessageState.set(null);
 
+    if (this.creating()) {
+      return;
+    }
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       this.focusFirstInvalidControl();
@@ -114,23 +124,24 @@ export class DealFormComponent {
     }
 
     const { name, address, purchasePrice, netOperatingIncome } = this.form.getRawValue();
-    const trimmedName = name.trim();
 
-    this.dealCreated.emit({
-      id: createDealId(),
-      name: trimmedName,
+    this.createRequested.emit({
+      name: name.trim(),
       address: address.trim(),
       purchasePrice,
       netOperatingIncome,
     });
+  }
 
+  /** Resets the form and announces success after the store confirms persistence. */
+  confirmCreated(name: string): void {
     this.form.reset({
       name: '',
       address: '',
       purchasePrice: 0,
       netOperatingIncome: 0,
     });
-    this.statusMessageState.set(`Added ${trimmedName}.`);
+    this.statusMessageState.set(`Added ${name}.`);
   }
 
   private focusFirstInvalidControl(): void {

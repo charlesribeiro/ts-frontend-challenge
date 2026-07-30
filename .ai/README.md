@@ -10,6 +10,7 @@ agreements. This folder holds the background that is too long for it.
 | ------------------------------------------------ | ----------------------------------------------------- |
 | [architecture.md](architecture.md)               | Objective, layering, component boundaries and scope   |
 | [angular17.md](angular17.md)                     | Angular 17 APIs, conventions and code style           |
+| [domain-model.md](domain-model.md)               | Deal fields, create payload, MockAPI sample JSON      |
 | [implementation-plan.md](implementation-plan.md) | Phased delivery plan and definitions of done          |
 | [decisions.md](decisions.md)                     | Log of technical decisions and their trade-offs       |
 | [prompts/](prompts)                              | Reusable task prompts for features, bugfixes, reviews |
