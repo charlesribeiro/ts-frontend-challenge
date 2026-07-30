@@ -30,11 +30,16 @@ describe('DealFiltersComponent', () => {
   }
 
   it('labels the search, comparison and amount controls', () => {
+    const priceFieldset = requireElement('.deal-filters__fieldset');
+
     expect(requireElement('label[for="deal-search"]').textContent).toContain('Search by name');
+    expect(priceFieldset.querySelector('legend')?.textContent).toContain('Purchase price');
+    expect(priceFieldset.querySelector('#deal-price-comparison')).not.toBeNull();
+    expect(priceFieldset.querySelector('#deal-price-amount')).not.toBeNull();
     expect(requireElement('label[for="deal-price-comparison"]').textContent).toContain(
-      'Purchase price',
+      'Comparison',
     );
-    expect(requireElement('label[for="deal-price-amount"]').textContent).toContain(
+    expect(requireElement('label[for="deal-price-amount"]').textContent?.trim()).toBe(
       'Amount in US dollars',
     );
   });

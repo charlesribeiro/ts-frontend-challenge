@@ -1,5 +1,12 @@
 import { PercentPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, inject, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  inject,
+  output,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
@@ -49,6 +56,10 @@ export class DealFormComponent {
 
   readonly dealCreated = output<Deal>();
 
+  private readonly statusMessageState = signal<string | null>(null);
+
+  readonly statusMessage = this.statusMessageState.asReadonly();
+
   readonly form = this.formBuilder.nonNullable.group({
     name: ['', [requiredTrimmed()]],
     address: ['', [requiredTrimmed()]],
@@ -93,6 +104,8 @@ export class DealFormComponent {
   }
 
   submit(): void {
+    this.statusMessageState.set(null);
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       this.focusFirstInvalidControl();
@@ -101,10 +114,11 @@ export class DealFormComponent {
     }
 
     const { name, address, purchasePrice, netOperatingIncome } = this.form.getRawValue();
+    const trimmedName = name.trim();
 
     this.dealCreated.emit({
       id: createDealId(),
-      name: name.trim(),
+      name: trimmedName,
       address: address.trim(),
       purchasePrice,
       netOperatingIncome,
@@ -116,6 +130,7 @@ export class DealFormComponent {
       purchasePrice: 0,
       netOperatingIncome: 0,
     });
+    this.statusMessageState.set(`Added ${trimmedName}.`);
   }
 
   private focusFirstInvalidControl(): void {

@@ -15,7 +15,7 @@ export const routes: Routes = [
     path: 'login',
     component: LoginComponent,
     canActivate: [guestGuard],
-    title: 'Sign in',
+    title: 'Sign in · Deal Desk',
   },
   {
     path: '',
@@ -25,7 +25,7 @@ export const routes: Routes = [
       {
         path: 'deals',
         component: DealsPageComponent,
-        title: 'Deals',
+        title: 'Deals · Deal Desk',
       },
       {
         path: '',

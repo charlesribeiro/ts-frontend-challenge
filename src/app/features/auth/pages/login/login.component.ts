@@ -63,6 +63,9 @@ export class LoginComponent {
     if (!this.authService.login(email, password)) {
       this.credentialsRejectedState.set(true);
       this.form.controls.password.reset();
+      // Password was cleared; move focus there so the alert and empty field are
+      // announced together instead of leaving the user on the submit button.
+      this.focusControl('password');
 
       return;
     }
@@ -77,10 +80,12 @@ export class LoginComponent {
         ? 'password'
         : null;
 
-    if (controlId === null) {
-      return;
+    if (controlId !== null) {
+      this.focusControl(controlId);
     }
+  }
 
+  private focusControl(controlId: string): void {
     const control = this.host.nativeElement.querySelector(`#${controlId}`);
 
     if (control instanceof HTMLElement) {

@@ -1,5 +1,5 @@
 <div class="deals-table">
-  <div class="deals-table__scroll">
+  <div class="deals-table__scroll" tabindex="0" role="region" aria-label="Deal list">
     <table>
       <caption class="visually-hidden">
         Filtered commercial real-estate deals
@@ -9,7 +9,9 @@
           <th scope="col">Name</th>
           <th scope="col">Address</th>
           <th class="deals-table__numeric" scope="col">Purchase price</th>
-          <th class="deals-table__numeric" scope="col">NOI</th>
+          <th class="deals-table__numeric" scope="col">
+            <abbr title="Net operating income">NOI</abbr>
+          </th>
           <th class="deals-table__numeric" scope="col">Cap rate</th>
         </tr>
       </thead>

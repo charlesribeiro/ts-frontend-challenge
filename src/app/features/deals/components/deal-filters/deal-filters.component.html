@@ -12,9 +12,10 @@
     />
   </div>
 
-  <div class="deal-filters__field">
-    <label class="deal-filters__label" for="deal-price-comparison">Purchase price</label>
+  <fieldset class="deal-filters__field deal-filters__fieldset">
+    <legend class="deal-filters__label">Purchase price</legend>
     <div class="deal-filters__price">
+      <label class="visually-hidden" for="deal-price-comparison">Comparison</label>
       <select
         id="deal-price-comparison"
         class="deal-filters__select"
@@ -40,7 +41,7 @@
         (input)="onAmountInput($event)"
       />
     </div>
-  </div>
+  </fieldset>
 
   <div class="deal-filters__actions">
     <button

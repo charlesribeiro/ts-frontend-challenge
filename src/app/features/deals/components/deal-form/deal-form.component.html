@@ -88,6 +88,10 @@
       <strong>{{ previewCapRate() | percent: '1.1-2' }}</strong>
     </p>
 
+    @if (statusMessage(); as message) {
+      <p class="deal-form__status" role="status">{{ message }}</p>
+    }
+
     <button class="deal-form__submit" type="submit">Add deal</button>
   </form>
 </section>
