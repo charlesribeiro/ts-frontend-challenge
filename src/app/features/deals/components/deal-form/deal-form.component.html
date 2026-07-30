@@ -1,1 +1,93 @@
-<p>deal-form works!</p>
+<section class="deal-form" aria-labelledby="deal-form-title">
+  <h2 id="deal-form-title" class="deal-form__title">Add a deal</h2>
+  <p class="deal-form__intro">
+    Create a new opportunity. Cap rate is calculated from NOI and purchase price.
+  </p>
+
+  <form class="deal-form__fields" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="field">
+      <label class="field__label" for="deal-name">Name</label>
+      <input
+        id="deal-name"
+        class="field__input"
+        type="text"
+        formControlName="name"
+        autocomplete="off"
+        required
+        [attr.aria-invalid]="nameInvalid()"
+        [attr.aria-describedby]="nameInvalid() ? 'deal-name-error' : null"
+      />
+      @if (nameInvalid()) {
+        <p class="field__error" id="deal-name-error" role="alert">Enter a deal name.</p>
+      }
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="deal-address">Address</label>
+      <input
+        id="deal-address"
+        class="field__input"
+        type="text"
+        formControlName="address"
+        autocomplete="street-address"
+        required
+        [attr.aria-invalid]="addressInvalid()"
+        [attr.aria-describedby]="addressInvalid() ? 'deal-address-error' : null"
+      />
+      @if (addressInvalid()) {
+        <p class="field__error" id="deal-address-error" role="alert">Enter an address.</p>
+      }
+    </div>
+
+    <div class="deal-form__row">
+      <div class="field">
+        <label class="field__label" for="deal-purchase-price">Purchase price (USD)</label>
+        <input
+          id="deal-purchase-price"
+          class="field__input"
+          type="number"
+          formControlName="purchasePrice"
+          min="0.01"
+          step="1000"
+          inputmode="decimal"
+          required
+          [attr.aria-invalid]="purchasePriceInvalid()"
+          [attr.aria-describedby]="purchasePriceInvalid() ? 'deal-purchase-price-error' : null"
+        />
+        @if (purchasePriceInvalid()) {
+          <p class="field__error" id="deal-purchase-price-error" role="alert">
+            Enter a purchase price greater than zero.
+          </p>
+        }
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="deal-noi">Net operating income (USD)</label>
+        <input
+          id="deal-noi"
+          class="field__input"
+          type="number"
+          formControlName="netOperatingIncome"
+          min="0"
+          step="1000"
+          inputmode="decimal"
+          required
+          [attr.aria-invalid]="netOperatingIncomeInvalid()"
+          [attr.aria-describedby]="netOperatingIncomeInvalid() ? 'deal-noi-error' : null"
+        />
+        @if (netOperatingIncomeInvalid()) {
+          <p class="field__error" id="deal-noi-error" role="alert">
+            Enter a net operating income of zero or more.
+          </p>
+        }
+      </div>
+    </div>
+
+    <p class="deal-form__cap-rate" aria-live="polite">
+      Cap rate
+      <strong>{{ previewCapRate() | percent: '1.1-2' }}</strong>
+    </p>
+
+    <button class="deal-form__submit" type="submit">Add deal</button>
+  </form>
+</section>

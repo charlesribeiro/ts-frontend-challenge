@@ -31,9 +31,10 @@ describe('DealsPageComponent', () => {
     return element;
   }
 
-  it('renders the filter bar and the deals table', () => {
+  it('renders the filter bar, the deals table and the creation form', () => {
     expect(host.querySelector('app-deal-filters')).not.toBeNull();
     expect(host.querySelector('app-deals-table')).not.toBeNull();
+    expect(host.querySelector('app-deal-form')).not.toBeNull();
     expect(host.textContent).toContain(MOCK_DEALS[0].name);
   });
 
@@ -94,6 +95,49 @@ describe('DealsPageComponent', () => {
     expect(requireElement<HTMLInputElement>('#deal-search').value).toBe('');
     expect(requireElement<HTMLInputElement>('#deal-price-amount').value).toBe('');
     expect(host.textContent).toMatch(/Riverside\s+Plaza/);
+    expect(host.querySelector('.deals-table__empty')).toBeNull();
+  });
+
+  it('adds a submitted deal to the store and the table', () => {
+    const fill = (selector: string, value: string): void => {
+      const input = requireElement<HTMLInputElement>(selector);
+      input.value = value;
+      input.dispatchEvent(new Event('input'));
+    };
+
+    fill('#deal-name', 'Foxglove Distribution Center');
+    fill('#deal-address', '18 Foxglove Lane, Reno, NV 89506');
+    fill('#deal-purchase-price', '5000000');
+    fill('#deal-noi', '325000');
+    requireElement<HTMLFormElement>('app-deal-form form').dispatchEvent(new Event('submit'));
+    fixture.detectChanges();
+
+    expect(store.deals().at(-1)?.name).toBe('Foxglove Distribution Center');
+    expect(host.textContent).toMatch(/Foxglove\s+Distribution\s+Center/);
+  });
+
+  it('lets a newly created deal pass through the active search filter', () => {
+    const search = requireElement<HTMLInputElement>('#deal-search');
+    search.value = 'foxglove';
+    search.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+
+    expect(host.textContent).toContain('No deals match the current filters');
+
+    const fill = (selector: string, value: string): void => {
+      const input = requireElement<HTMLInputElement>(selector);
+      input.value = value;
+      input.dispatchEvent(new Event('input'));
+    };
+
+    fill('#deal-name', 'Foxglove Distribution Center');
+    fill('#deal-address', '18 Foxglove Lane, Reno, NV 89506');
+    fill('#deal-purchase-price', '5000000');
+    fill('#deal-noi', '325000');
+    requireElement<HTMLFormElement>('app-deal-form form').dispatchEvent(new Event('submit'));
+    fixture.detectChanges();
+
+    expect(host.textContent).toMatch(/Foxglove\s+Distribution\s+Center/);
     expect(host.querySelector('.deals-table__empty')).toBeNull();
   });
 });

@@ -13,4 +13,6 @@
   />
 
   <app-deals-table [deals]="filteredDeals()" [searchTerm]="searchTerm()" />
+
+  <app-deal-form (dealCreated)="onDealCreated($event)" />
 </section>

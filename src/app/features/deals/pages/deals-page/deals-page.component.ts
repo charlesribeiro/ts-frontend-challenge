@@ -1,15 +1,17 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { DealFiltersComponent } from '../../components/deal-filters/deal-filters.component';
+import { DealFormComponent } from '../../components/deal-form/deal-form.component';
 import { DealsTableComponent } from '../../components/deals-table/deals-table.component';
 import { DealsStoreService } from '../../data-access/deals-store.service';
 import { PriceFilter } from '../../models/deal-filter.model';
+import { Deal } from '../../models/deal.model';
 
-/** Dashboard page: wires the filter bar and table to the deals store. */
+/** Dashboard page: wires filters, the creation form, and the table to the store. */
 @Component({
   selector: 'app-deals-page',
   standalone: true,
-  imports: [DealFiltersComponent, DealsTableComponent],
+  imports: [DealFiltersComponent, DealFormComponent, DealsTableComponent],
   templateUrl: './deals-page.component.html',
   styleUrl: './deals-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,5 +33,9 @@ export class DealsPageComponent {
 
   onClearFilters(): void {
     this.store.clearFilters();
+  }
+
+  onDealCreated(deal: Deal): void {
+    this.store.addDeal(deal);
   }
 }
