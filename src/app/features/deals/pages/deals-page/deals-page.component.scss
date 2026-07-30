@@ -1,0 +1,23 @@
+.deals-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+.deals-page__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.deals-page__title {
+  margin: 0;
+  font-size: 1.75rem;
+}
+
+.deals-page__intro {
+  margin: 0;
+  color: var(--color-text-muted);
+}

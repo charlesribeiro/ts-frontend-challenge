@@ -48,4 +48,9 @@ export class DealsStoreService {
   addDeal(deal: Deal): void {
     this.dealsState.update((deals) => [...deals, { ...deal }]);
   }
+
+  clearFilters(): void {
+    this.searchTermState.set('');
+    this.priceFilterState.set(EMPTY_PRICE_FILTER);
+  }
 }

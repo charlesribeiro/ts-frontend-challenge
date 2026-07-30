@@ -1,1 +1,55 @@
-<p>deal-filters works!</p>
+<div class="deal-filters" role="search" aria-label="Filter deals">
+  <div class="deal-filters__field">
+    <label class="deal-filters__label" for="deal-search">Search by name</label>
+    <input
+      id="deal-search"
+      class="deal-filters__input"
+      type="search"
+      name="search"
+      autocomplete="off"
+      [value]="searchTerm()"
+      (input)="onSearchInput($event)"
+    />
+  </div>
+
+  <div class="deal-filters__field">
+    <label class="deal-filters__label" for="deal-price-comparison">Purchase price</label>
+    <div class="deal-filters__price">
+      <select
+        id="deal-price-comparison"
+        class="deal-filters__select"
+        name="comparison"
+        [value]="priceFilter().comparison"
+        (change)="onComparisonChange($event)"
+      >
+        <option value="greaterThan">Greater than</option>
+        <option value="lessThan">Less than</option>
+      </select>
+
+      <label class="visually-hidden" for="deal-price-amount">Amount in US dollars</label>
+      <input
+        id="deal-price-amount"
+        class="deal-filters__input deal-filters__input--amount"
+        type="number"
+        name="amount"
+        min="0"
+        step="1000"
+        inputmode="decimal"
+        placeholder="Amount"
+        [value]="priceFilter().amount ?? ''"
+        (input)="onAmountInput($event)"
+      />
+    </div>
+  </div>
+
+  <div class="deal-filters__actions">
+    <button
+      class="deal-filters__clear"
+      type="button"
+      [disabled]="!filtersActive()"
+      (click)="onClear()"
+    >
+      Clear filters
+    </button>
+  </div>
+</div>

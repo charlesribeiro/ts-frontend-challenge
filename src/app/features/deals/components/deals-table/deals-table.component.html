@@ -1,1 +1,49 @@
-<p>deals-table works!</p>
+<div class="deals-table">
+  <div class="deals-table__scroll">
+    <table>
+      <caption class="visually-hidden">
+        Filtered commercial real-estate deals
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Address</th>
+          <th class="deals-table__numeric" scope="col">Purchase price</th>
+          <th class="deals-table__numeric" scope="col">NOI</th>
+          <th class="deals-table__numeric" scope="col">Cap rate</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (deal of deals(); track deal.id) {
+          <tr>
+            <th scope="row">
+              @for (segment of deal.name | highlightSearch: searchTerm(); track $index) {
+                @if (segment.match) {
+                  <mark>{{ segment.text }}</mark>
+                } @else {
+                  {{ segment.text }}
+                }
+              }
+            </th>
+            <td>{{ deal.address }}</td>
+            <td class="deals-table__numeric">
+              {{ deal.purchasePrice | currency: 'USD' : 'symbol' : '1.0-0' }}
+            </td>
+            <td class="deals-table__numeric">
+              {{ deal.netOperatingIncome | currency: 'USD' : 'symbol' : '1.0-0' }}
+            </td>
+            <td class="deals-table__numeric">{{ capRate(deal) | percent: '1.1-2' }}</td>
+          </tr>
+        } @empty {
+          <tr class="deals-table__empty-row">
+            <td colspan="5">
+              <p class="deals-table__empty" role="status">
+                No deals match the current filters. Try a broader search or clear the filters.
+              </p>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
