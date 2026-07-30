@@ -20,11 +20,7 @@ The dev server runs at http://localhost:4200 and reloads on file changes.
 
 ## Demo
 
-
-
 https://github.com/user-attachments/assets/499aaef9-e7c1-48d8-8d85-6345188e87a7
-
-
 
 ## Scripts
 
