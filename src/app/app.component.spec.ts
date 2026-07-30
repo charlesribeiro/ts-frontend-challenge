@@ -1,29 +1,22 @@
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AppComponent],
+      providers: [provideRouter([])],
     }).compileComponents();
   });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
-  });
-
-  it(`should have the 'ts-frontend-challenge' title`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('ts-frontend-challenge');
-  });
-
-  it('should render title', () => {
+  it('hands the page over to the router', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, ts-frontend-challenge');
+
+    const host = fixture.nativeElement as HTMLElement;
+
+    expect(host.querySelector('router-outlet')).not.toBeNull();
   });
 });

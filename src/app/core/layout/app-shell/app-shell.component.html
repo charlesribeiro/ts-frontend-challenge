@@ -1,1 +1,19 @@
-<p>app-shell works!</p>
+<header class="shell-header">
+  <a class="shell-header__brand" routerLink="/deals">Deal Desk</a>
+
+  <nav class="shell-header__nav" aria-label="Main">
+    <a routerLink="/deals" routerLinkActive="is-active" ariaCurrentWhenActive="page">Deals</a>
+  </nav>
+
+  <div class="shell-header__account">
+    @if (signedInEmail(); as email) {
+      <span class="shell-header__user">{{ email }}</span>
+    }
+
+    <button class="shell-header__logout" type="button" (click)="logout()">Log out</button>
+  </div>
+</header>
+
+<main class="shell-main">
+  <router-outlet />
+</main>
