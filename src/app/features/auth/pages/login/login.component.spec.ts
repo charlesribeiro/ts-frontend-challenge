@@ -78,6 +78,18 @@ describe('LoginComponent', () => {
     submit();
 
     expect(host.textContent).toContain('Enter a valid email address');
+    expect(document.activeElement).toBe(requireElement('#email'));
+    expect(navigate).not.toHaveBeenCalled();
+  });
+
+  it('focuses the password field when only the password is missing', () => {
+    fill('#email', DEMO_CREDENTIALS.email);
+
+    submit();
+
+    expect(host.textContent).toContain('Enter your password.');
+    expect(document.activeElement).toBe(requireElement('#password'));
+    expect(authService.isAuthenticated()).toBe(false);
     expect(navigate).not.toHaveBeenCalled();
   });
 
@@ -88,6 +100,7 @@ describe('LoginComponent', () => {
     submit();
 
     expect(requireElement('[role="alert"]').textContent).toContain('did not recognise');
+    expect(document.activeElement).toBe(requireElement('#password'));
     expect(authService.isAuthenticated()).toBe(false);
     expect(navigate).not.toHaveBeenCalled();
   });

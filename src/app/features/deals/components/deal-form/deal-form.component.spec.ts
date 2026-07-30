@@ -108,11 +108,40 @@ describe('DealFormComponent', () => {
       }),
     );
     expect(emitted[0].id.length).toBeGreaterThan(0);
+    expect(emitted[0].name).toBe('Foxglove Distribution Center');
+    expect(emitted[0].name).not.toMatch(/^\s|\s$/);
 
     expect(requireElement<HTMLInputElement>('#deal-name').value).toBe('');
     expect(requireElement<HTMLInputElement>('#deal-address').value).toBe('');
     expect(requireElement<HTMLInputElement>('#deal-purchase-price').value).toBe('0');
     expect(requireElement<HTMLInputElement>('#deal-noi').value).toBe('0');
+    expect(requireElement('[role="status"]').textContent?.trim()).toBe(
+      'Added Foxglove Distribution Center.',
+    );
+  });
+
+  it('rejects a whitespace-only name while the other fields are valid', () => {
+    const emitted: Deal[] = [];
+    fixture.componentInstance.dealCreated.subscribe((deal) => emitted.push(deal));
+
+    fillValidDeal({ name: '   ' });
+    submit();
+
+    expect(emitted).toHaveLength(0);
+    expect(host.textContent).toContain('Enter a deal name.');
+    expect(fixture.componentInstance.form.controls.name.invalid).toBe(true);
+    expect(host.querySelector('[role="status"]')).toBeNull();
+  });
+
+  it('clears the success status when a later invalid submit is attempted', () => {
+    fillValidDeal();
+    submit();
+    expect(requireElement('[role="status"]').textContent).toContain('Added');
+
+    fill('#deal-name', '');
+    submit();
+
+    expect(host.querySelector('[role="status"]')).toBeNull();
   });
 
   it('does not emit when the form is invalid', () => {

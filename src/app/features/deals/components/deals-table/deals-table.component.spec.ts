@@ -82,9 +82,18 @@ describe('DealsTableComponent', () => {
     expect(empty?.textContent).toContain('No deals match the current filters');
   });
 
-  it('keeps a horizontal scroll wrapper around the table', () => {
+  it('keeps a keyboard-reachable horizontal scroll wrapper around the table', () => {
     render([riverside, northgate]);
 
-    expect(host.querySelector('.deals-table__scroll')).not.toBeNull();
+    const scroll = host.querySelector('.deals-table__scroll');
+    expect(scroll).not.toBeNull();
+    expect(scroll?.getAttribute('tabindex')).toBe('0');
+    expect(scroll?.getAttribute('role')).toBe('region');
+    expect(scroll?.getAttribute('aria-label')).toBe('Deal list');
+    expect(scroll?.querySelector('table')).not.toBeNull();
+
+    const noiAbbreviation = scroll?.querySelector('table abbr');
+    expect(noiAbbreviation?.textContent?.trim()).toBe('NOI');
+    expect(noiAbbreviation?.getAttribute('title')).toBe('Net operating income');
   });
 });

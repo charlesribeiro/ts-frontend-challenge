@@ -1,3 +1,5 @@
+@use '../../../shared/styles/visually-hidden' as *;
+
 :host {
   display: flex;
   flex-direction: column;
@@ -77,6 +79,8 @@
 
 @media (width <= 40rem) {
   .shell-header__user {
-    display: none;
+    // Hide visually on narrow screens but keep the signed-in email in the
+    // accessibility tree — display:none would remove it from AT entirely.
+    @include visually-hidden;
   }
 }
