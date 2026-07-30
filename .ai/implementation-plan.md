@@ -347,8 +347,8 @@ Then manually verify:
 
 Unless all required work is complete and substantial time remains, do not add:
 
-- backend API
-- database persistence
+- a second backend beyond the MockAPI deals resource already in use
+- database persistence beyond MockAPI
 - real authentication
 - SSR
 - SSG

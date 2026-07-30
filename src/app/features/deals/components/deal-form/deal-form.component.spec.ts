@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Deal } from '../../models/deal.model';
+import { DEAL_API_REQUEST_ERROR_MESSAGE } from '../../data-access/deal-api.errors';
+import { CreateDealInput } from '../../models/create-deal-input.model';
 import { DealFormComponent } from './deal-form.component';
 
 describe('DealFormComponent', () => {
@@ -88,9 +89,9 @@ describe('DealFormComponent', () => {
     expect(host.textContent).toContain('5.0%');
   });
 
-  it('emits a trimmed deal with a unique id and resets the form', () => {
-    const emitted: Deal[] = [];
-    fixture.componentInstance.dealCreated.subscribe((deal) => emitted.push(deal));
+  it('emits a trimmed create payload without an id and keeps values until confirmed', () => {
+    const emitted: CreateDealInput[] = [];
+    fixture.componentInstance.createRequested.subscribe((input) => emitted.push(input));
 
     fillValidDeal({
       name: '  Foxglove Distribution Center  ',
@@ -99,17 +100,24 @@ describe('DealFormComponent', () => {
     submit();
 
     expect(emitted).toHaveLength(1);
-    expect(emitted[0]).toEqual(
-      expect.objectContaining({
-        name: 'Foxglove Distribution Center',
-        address: '18 Foxglove Lane, Reno, NV 89506',
-        purchasePrice: 5_000_000,
-        netOperatingIncome: 325_000,
-      }),
+    expect(emitted[0]).toEqual({
+      name: 'Foxglove Distribution Center',
+      address: '18 Foxglove Lane, Reno, NV 89506',
+      purchasePrice: 5_000_000,
+      netOperatingIncome: 325_000,
+    });
+    expect(emitted[0]).not.toHaveProperty('id');
+
+    expect(requireElement<HTMLInputElement>('#deal-name').value).toBe(
+      '  Foxglove Distribution Center  ',
     );
-    expect(emitted[0].id.length).toBeGreaterThan(0);
-    expect(emitted[0].name).toBe('Foxglove Distribution Center');
-    expect(emitted[0].name).not.toMatch(/^\s|\s$/);
+    expect(host.querySelector('[role="status"]')).toBeNull();
+  });
+
+  it('resets and announces success only when confirmCreated is called', () => {
+    fillValidDeal();
+    fixture.componentInstance.confirmCreated('Foxglove Distribution Center');
+    fixture.detectChanges();
 
     expect(requireElement<HTMLInputElement>('#deal-name').value).toBe('');
     expect(requireElement<HTMLInputElement>('#deal-address').value).toBe('');
@@ -121,8 +129,8 @@ describe('DealFormComponent', () => {
   });
 
   it('rejects a whitespace-only name while the other fields are valid', () => {
-    const emitted: Deal[] = [];
-    fixture.componentInstance.dealCreated.subscribe((deal) => emitted.push(deal));
+    const emitted: CreateDealInput[] = [];
+    fixture.componentInstance.createRequested.subscribe((input) => emitted.push(input));
 
     fillValidDeal({ name: '   ' });
     submit();
@@ -134,8 +142,8 @@ describe('DealFormComponent', () => {
   });
 
   it('clears the success status when a later invalid submit is attempted', () => {
-    fillValidDeal();
-    submit();
+    fixture.componentInstance.confirmCreated('Foxglove Distribution Center');
+    fixture.detectChanges();
     expect(requireElement('[role="status"]').textContent).toContain('Added');
 
     fill('#deal-name', '');
@@ -145,12 +153,52 @@ describe('DealFormComponent', () => {
   });
 
   it('does not emit when the form is invalid', () => {
-    const emitted: Deal[] = [];
-    fixture.componentInstance.dealCreated.subscribe((deal) => emitted.push(deal));
+    const emitted: CreateDealInput[] = [];
+    fixture.componentInstance.createRequested.subscribe((input) => emitted.push(input));
 
     fill('#deal-name', 'Only a name');
     submit();
 
     expect(emitted).toHaveLength(0);
+  });
+
+  it('does not emit when submit is dispatched while creating', () => {
+    const emitted: CreateDealInput[] = [];
+    fixture.componentInstance.createRequested.subscribe((input) => emitted.push(input));
+
+    fillValidDeal();
+    fixture.componentRef.setInput('creating', true);
+    fixture.detectChanges();
+
+    submit();
+
+    expect(emitted).toHaveLength(0);
+  });
+
+  it('marks submit as aria-disabled and shows the create error from the parent', () => {
+    fixture.componentRef.setInput('creating', true);
+    fixture.componentRef.setInput('createError', DEAL_API_REQUEST_ERROR_MESSAGE);
+    fixture.detectChanges();
+
+    expect(requireElement('.deal-form__fieldset').getAttribute('aria-disabled')).toBe('true');
+    expect(requireElement<HTMLInputElement>('#deal-name').readOnly).toBe(true);
+
+    const submitButton = requireElement<HTMLButtonElement>('.deal-form__submit');
+    expect(submitButton.disabled).toBe(false);
+    expect(submitButton.getAttribute('aria-disabled')).toBe('true');
+    expect(host.textContent).toContain('Saving…');
+    expect(requireElement('[role="alert"]').textContent).toContain(DEAL_API_REQUEST_ERROR_MESSAGE);
+  });
+
+  it('keeps the create error visible and re-enables submit after a failed create', () => {
+    fixture.componentRef.setInput('creating', false);
+    fixture.componentRef.setInput('createError', DEAL_API_REQUEST_ERROR_MESSAGE);
+    fixture.detectChanges();
+
+    const submitButton = requireElement<HTMLButtonElement>('.deal-form__submit');
+    expect(submitButton.disabled).toBe(false);
+    expect(submitButton.getAttribute('aria-disabled')).toBeNull();
+    expect(submitButton.textContent?.trim()).toBe('Add deal');
+    expect(requireElement('[role="alert"]').textContent).toContain(DEAL_API_REQUEST_ERROR_MESSAGE);
   });
 });

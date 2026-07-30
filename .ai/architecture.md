@@ -63,7 +63,7 @@ The features area contains code owned by a specific business capability.
 The deals feature owns:
 
 - deal models
-- mock deal data
+- MockAPI data access (`DealsApiService`, Zod schemas, mappers)
 - deal state
 - filtering logic
 - financial calculations
@@ -132,24 +132,28 @@ Use one signal-based store or service as the source of truth for deals.
 
 The store should own:
 
-- the master deal collection
+- the master deal collection (loaded from MockAPI)
 - search criteria
 - price-filter criteria
 - computed filtered results
+- loading / creating / error flags for remote operations
 - immutable state updates
 
 Do not introduce NgRx, NGXS, Akita, or another state-management library.
 
-The challenge state is small and synchronous, so a dedicated state library would add more ceremony than value.
+HTTP calls live in `DealsApiService`. The store coordinates those calls and
+exposes signals; it does not parse JSON itself.
 
 Expected state flow:
 
 ```text
-User action
+User action / page init
     ↓
 Component event handler
     ↓
-Store mutation method
+Store method (loadDeals / createDeal / set filters)
+    ↓
+DealsApiService (GET/POST) + Zod safeParse
     ↓
 Writable signal update
     ↓
@@ -168,32 +172,39 @@ Example:
 @Injectable({
   providedIn: 'root',
 })
-export class DealsStore {
-  private readonly dealsState = signal<readonly Deal[]>(INITIAL_DEALS);
+export class DealsStoreService {
+  private readonly dealsState = signal<readonly Deal[]>([]);
+  private readonly searchTermState = signal('');
+  private readonly priceFilterState = signal<PriceFilter>(EMPTY_PRICE_FILTER);
   readonly deals = this.dealsState.asReadonly();
+  readonly searchTerm = this.searchTermState.asReadonly();
+  readonly priceFilter = this.priceFilterState.asReadonly();
   readonly filteredDeals = computed(() => {
     return filterDeals(this.deals(), this.searchTerm(), this.priceFilter());
   });
-  addDeal(deal: Deal): void {
-    this.dealsState.update((deals) => [...deals, deal]);
+  loadDeals(): void {
+    /* GET /deals → dealsState */
+  }
+  createDeal(input: CreateDealInput): Observable<Deal> {
+    /* POST /deals → append on success */
   }
 }
 ```
 
 ## Data Persistence
 
-Deal and authentication data are intentionally held in memory.
+Deals are persisted through a MockAPI REST resource (`GET` / `POST` `/deals`).
+Authentication remains simulated in memory and is not a security boundary.
 
 Consequences:
 
-- refreshing the browser resets the application
-- no backend API is required
-- no persistence guarantee should be implied
-- client-side authentication is not a security boundary
+- refreshing the browser reloads deals from MockAPI
+- create is pessimistic: the table updates only after a successful POST
+- filters and cap rate stay client-side over the loaded collection
+- the app depends on the MockAPI project URL in `src/environments/`
 
-This is an explicit scope decision, not an accidental omission.
-
-Persistence should not be added unless the challenge requirements explicitly request it.
+Cap rate is never stored on the server or in the domain model; it is always
+derived with `calculateCapRate`.
 
 ## Business Logic
 
@@ -354,21 +365,18 @@ For narrow layouts:
 
 With a real backend and production requirements, the architecture could evolve to include:
 
-- typed HTTP repositories
 - server-side authentication
-- persisted deal data
-- loading and error state
 - authorization rules
-- API validation
 - pagination
 - server-side filtering
 - observability
 - audit logging
-- environment-specific configuration
 - end-to-end testing
 - deployment pipelines
 
-These are intentionally outside the take-home scope.
+Typed HTTP access, API validation (Zod), loading/error state, environment
+configuration, and MockAPI-backed deal persistence are already in place for
+deals. Auth remains client-simulated.
 
 ## Architectural Decision Rule
 

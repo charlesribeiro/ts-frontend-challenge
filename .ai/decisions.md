@@ -91,3 +91,19 @@ Angular is the real fix and removes the need for the waiver.
 **Cost:** Runs on a Node major Angular 17.3 never tested, so a runtime-specific
 bug in the toolchain is our problem to diagnose rather than a known
 incompatibility.
+
+## 7. MockAPI for deal persistence + Zod at the HTTP boundary
+
+**Decision:** Persist deals through MockAPI (`GET` / `POST` `/deals`) with
+`HttpClient`, environment `apiBaseUrl`, and Zod `safeParse` on responses.
+Create is pessimistic. Cap rate stays derived client-side. Auth stays
+in-memory.
+
+**Why:** Refresh must keep deals once the challenge asks for remote
+persistence. Zod keeps wire validation out of Angular forms and out of the
+domain model. A thin API service plus the existing signal store matches the
+feature-first architecture without NgRx.
+
+**Cost:** Demo depends on a third-party MockAPI project (latency, quotas,
+schema quirks). Numeric fields may arrive as strings and need coercion.
+Interactive validation and wire validation are two layers by design.

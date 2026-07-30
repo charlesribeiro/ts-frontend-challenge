@@ -1,12 +1,12 @@
 import { Deal } from '../models/deal.model';
 
 /**
- * Seed data for the in-memory store.
+ * Fixture deals for unit tests and optional MockAPI seeding.
  *
- * Prices span roughly $2.7M to $24M and cap rates 5.5% to 8.5%, so both price
- * comparisons return a meaningful subset instead of everything or nothing. Two
- * names share the word "Park" and two share "view", which gives the search and
- * its highlighting something to match on more than one row.
+ * Runtime deal data comes from MockAPI via `DealsApiService`. Prices span
+ * roughly $2.7M to $24M and cap rates 5.5% to 8.5%, so both price comparisons
+ * return a meaningful subset. Two names share "Park" and two share "view",
+ * which gives search highlighting something to match on more than one row.
  */
 export const MOCK_DEALS: readonly Deal[] = [
   {

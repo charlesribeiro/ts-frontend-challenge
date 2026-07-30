@@ -4,15 +4,35 @@
     <p class="deals-page__intro">Browse the current pipeline and narrow it by name or price.</p>
   </header>
 
-  <app-deal-filters
-    [searchTerm]="searchTerm()"
-    [priceFilter]="priceFilter()"
-    (searchTermChange)="onSearchTermChange($event)"
-    (priceFilterChange)="onPriceFilterChange($event)"
-    (clear)="onClearFilters()"
-  />
+  @if (loading()) {
+    <p class="deals-page__status" role="status">Loading deals…</p>
+  } @else if (loadError()) {
+    <div class="deals-page__error" role="alert">
+      <p class="deals-page__error-message">{{ loadError() }}</p>
+      <button class="deals-page__retry" type="button" (click)="onRetryLoad()">Retry</button>
+    </div>
+  } @else {
+    <app-deal-filters
+      [searchTerm]="searchTerm()"
+      [priceFilter]="priceFilter()"
+      (searchTermChange)="onSearchTermChange($event)"
+      (priceFilterChange)="onPriceFilterChange($event)"
+      (clear)="onClearFilters()"
+    />
 
-  <app-deals-table [deals]="filteredDeals()" [searchTerm]="searchTerm()" />
+    @if (deals().length === 0) {
+      <p class="deals-page__empty" role="status">
+        No deals yet. Use the form below to add the first opportunity.
+      </p>
+    } @else {
+      <app-deals-table [deals]="filteredDeals()" [searchTerm]="searchTerm()" />
+    }
 
-  <app-deal-form (dealCreated)="onDealCreated($event)" />
+    <app-deal-form
+      #dealForm
+      [creating]="creating()"
+      [createError]="createError()"
+      (createRequested)="onCreateRequested($event, dealForm)"
+    />
+  }
 </section>
