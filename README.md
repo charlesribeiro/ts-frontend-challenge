@@ -101,10 +101,10 @@ Tests run on Jest with `jest-preset-angular` in a jsdom environment, so no
 browser is required. Specs sit next to the code they cover as `<name>.spec.ts`.
 Configuration lives in [`jest.config.js`](jest.config.js).
 
-Current test coverage info:
+Current test coverage (`npm run test:coverage`): statements **98.57%**,
+branches **91.3%**, functions **98.79%**, lines **98.45%** (146 tests passing).
 
-<img width="1263" height="704" alt="Screenshot 2026-07-30 at 01 14 14" src="https://github.com/user-attachments/assets/a6c7f762-9d66-4e3e-93c8-4fd7e096932f" />
-
+<img width="1263" height="704" alt="Jest coverage summary: 98.57% statements, 91.3% branches, 98.79% functions, 98.45% lines across the app source" src="https://github.com/user-attachments/assets/a6c7f762-9d66-4e3e-93c8-4fd7e096932f" />
 
 ## Code quality
 
